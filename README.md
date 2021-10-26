@@ -24,7 +24,7 @@ YYYY/MM/DD HH:MM:SS
 ...
 ```
 
-To save the value of `MYAPP_DATABASE_HOST` in container `abc123` to the local var `DB_PASSWORD`:
+To save the value of `MYAPP_DATABASE_PASS` in container `abc123` to the local var `DB_PASSWORD`:
 
     $ DB_PASSWORD=$(dockerenv -c abc123 -v MYAPP_DATABASE_PASS)
 
