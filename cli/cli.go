@@ -25,6 +25,7 @@ func New() *v2.App {
 			},
 		},
 		Commands: []*v2.Command{
+			commands.ListValues(),
 			commands.GetValue(),
 			commands.TLS(),
 		},

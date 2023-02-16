@@ -22,6 +22,18 @@ func TLS() *v2.Command {
 		Flags: []v2.Flag{},
 		Subcommands: []*v2.Command{
 			{
+				Name:  "dump",
+				Usage: "Attempts to dump info about a TLS cert",
+				//Action: dumpCertificateAction,
+				Flags: []v2.Flag{
+					&v2.BoolFlag{
+						Name:    "b64decode",
+						Aliases: []string{"b64", "d"},
+						Usage:   "Apply base64 decoding to the raw value",
+					},
+				},
+			},
+			{
 				Name:  "verify",
 				Usage: "equivalent to 'openssl x509 -noout -text'",
 				Flags: []v2.Flag{
@@ -103,6 +115,7 @@ func tlsVerifyAction(c *v2.Context) (err error) {
 		t := fmt.Sprintf("Certificate %d (CA: %v)", i, c.IsCA)
 		log.Println(t)
 		log.Println(strings.Repeat("=", len(t)))
+		log.Printf("\tSerial Number    : %s (%x)", c.SerialNumber, c.SerialNumber)
 		log.Printf("\tSubject          : %s", c.Subject)
 		log.Printf("\tSubject Key Id   : %x", c.SubjectKeyId)
 		log.Println("")
