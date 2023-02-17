@@ -226,7 +226,13 @@ func exportContainerEnvAction(c *v2.Context) error {
 func writeFileData(filename string, data []byte) error {
 	final_filename := OUTPUT_DIR + filename // prefix + filename
 	dirPath := filepath.Dir(filename)
-	os.MkdirAll(dirPath, os.ModePerm)
+	log.Infof("Preparing to write %d bytes to %s", len(data), final_filename)
+	log.Infof("Creating directory %s", dirPath)
+	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+		log.Errorf(err)
+		return
+	}
+
 	log.Infof("Writing %d bytes to %s", len(data), final_filename)
 	return ioutil.WriteFile(final_filename, data, 0644)
 }
