@@ -224,11 +224,17 @@ func writeFileData(filename string, data []byte) error {
 }
 
 func writeS3Data(filename string, data []byte) error {
-	var s3write = (S3_BUCKET != "")
+	var dryRun bool
+	if S3_BUCKET == "" {
+		dryRun = true
+		S3_BUCKET = "S3_BUCKET"
+		log.Warningf("Treating this as a dry run because S3_BUCKET Is not set")
+	}
+
 	s3FullPath := fmt.Sprintf("s3://%s%s", S3_BUCKET, filename)
 	log.Infof("Writing %d bytes to %s", len(data), s3FullPath)
 	log.Debugf("\033[33m%s\033[0m", data)
-	if !s3write {
+	if dryRun {
 		log.Warningf("S3_BUCKET is empty. No data will be written")
 		return nil // use as dry run for now
 	}
