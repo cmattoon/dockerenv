@@ -110,7 +110,7 @@ func exportContainerEnvAction(c *v2.Context) error {
 		OUTPUT_DIR = outputDir
 	}
 	log.Infof("Using output directory at %s", OUTPUT_DIR)
-	cli, err := client.NewClientWithOpts(client.FromEnv)
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
