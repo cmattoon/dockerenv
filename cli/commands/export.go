@@ -198,18 +198,24 @@ func exportContainerEnvAction(c *v2.Context) error {
 			envFileName := containerPrefix + "/container.env"
 
 			if format == "env" {
-				writeFileData(envFileName, []byte(txt.String()))
+				if err := writeFileData(envFileName, []byte(txt.String())); err != nil {
+					log.Errorf("failed to write to %s: %s", OUTPUT_DIR+envFileName, err)
+				}
 			} else if format == "s3" {
 				containersPrefix = pathPrefix + "/containers"
 				containerPrefix = containersPrefix + "/" + cid[0:8]
 				envFileName = containerPrefix + "/container.env"
 
-				writeS3Data(envFileName, []byte(txt.String()))
+				if err := writeS3Data(envFileName, []byte(txt.String())); err != nil {
+					log.Errorf("failed to write to S3: %s", err)
+				}
 			}
 		}
 		for name, data := range metaFiles {
 			if format == "s3" {
-				writeS3Data(name, data)
+				if err := writeS3Data(name, data); err != nil {
+					log.Errorf("failed to write to S3: %s", err)
+				}
 			}
 		}
 	}
