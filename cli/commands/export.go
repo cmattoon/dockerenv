@@ -187,10 +187,8 @@ func exportContainerEnvAction(c *v2.Context) error {
 			}
 		}
 	case "env", "s3":
-
 		var txt strings.Builder
 		for cid, cenv := range allValues {
-
 			for key, val := range cenv {
 				txt.WriteString(fmt.Sprintf("%s=\"%s\"\n", key, val))
 			}
@@ -205,9 +203,15 @@ func exportContainerEnvAction(c *v2.Context) error {
 			} else if format == "s3" {
 				containersPrefix = pathPrefix + "/containers"
 				containerPrefix = containersPrefix + "/" + cid[0:8]
-				envFileName = containerPrefix + "/container.env"
+				envFileName = containerPrefix + "/container.yml"
 
-				if err := writeS3Data(envFileName, []byte(txt.String())); err != nil {
+				data, err := yaml.Marshal(allValues)
+				if err != nil {
+					return fmt.Errorf("failed to marshal YAML: %w", err)
+				}
+
+				log.Infof("Writing YAML to S3 @ %s", envFileName)
+				if err := writeS3Data(envFileName, data); err != nil {
 					log.Errorf("failed to write to S3: %s", err)
 				}
 			}
