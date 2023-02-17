@@ -219,8 +219,7 @@ func exportContainerEnvAction(c *v2.Context) error {
 func writeFileData(filename string, data []byte) error {
 	final_filename := OUTPUT_DIR + filename // prefix + filename
 	log.Infof("Writing %d bytes to %s", len(data), final_filename)
-	//return ioutil.WriteFile(final_filename, data, 0644)
-	return nil
+	return ioutil.WriteFile(final_filename, data, 0644)
 }
 
 func writeS3Data(filename string, data []byte) error {
@@ -259,7 +258,7 @@ func writeS3Data(filename string, data []byte) error {
 		return err
 	}
 
-	fmt.Printf("Wrote %d bytes to %s\n", len(data), s3FullPath)
+	log.Infof("Wrote %d bytes to %s\n", len(data), s3FullPath)
 
 	return nil
 }
