@@ -3,11 +3,13 @@ package commands
 import (
 	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"strings"
-
-	"github.com/sirupsen/logrus"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
