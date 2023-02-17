@@ -23,11 +23,17 @@ import (
 var log *logrus.Logger
 var S3_BUCKET string
 var OUTPUT_DIR string
+var S3_REGION string
 
 func init() {
 	log = logrus.New()
 	S3_BUCKET, _ = os.LookupEnv("S3_BUCKET")
 	OUTPUT_DIR, _ = os.LookupEnv("OUTPUT_DIR")
+	if r, ok := os.LookupEnv("S3_REGION"); ok && r != "" {
+		S3_REGION = r
+	} else if r, ok := os.LookupEnv("AWS_DEFAULT_REGION"); ok && r != "" {
+		S3_REGION = r
+	}
 }
 
 func ExportCommand() *v2.Command {
@@ -215,8 +221,31 @@ func writeFileData(filename string, data []byte) error {
 }
 
 func writeS3Data(filename string, data []byte) error {
-	s3_full_path := fmt.Sprintf("s3://%s%s", S3_BUCKET, filename)
-	log.Infof("Writing %d bytes to %s", len(data), s3_full_path)
+	s3FullPath := fmt.Sprintf("s3://%s/%s", S3_BUCKET, filename)
+	log.Infof("Writing %d bytes to %s", len(data), s3FullPath)
 	log.Debugf("\033[33m%s\033[0m", data)
+
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String(S3_REGION),
+	})
+	if err != nil {
+		return err
+	}
+
+	s3client := s3.New(sess)
+
+	// Write data to S3
+	input := &s3.PutObjectInput{
+		Bucket: aws.String(S3_BUCKET),
+		Key:    aws.String(filename),
+		Body:   bytes.NewReader(data),
+	}
+	_, err = s3client.PutObject(input)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Wrote %d bytes to %s\n", len(data), s3FullPath)
+
 	return nil
 }
