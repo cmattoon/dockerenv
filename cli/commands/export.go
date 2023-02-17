@@ -10,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/docker/docker/api/types"
@@ -224,6 +225,8 @@ func exportContainerEnvAction(c *v2.Context) error {
 
 func writeFileData(filename string, data []byte) error {
 	final_filename := OUTPUT_DIR + filename // prefix + filename
+	dirPath := filepath.Dir(filename)
+	os.MkdirAll(dirPath, os.ModePerm)
 	log.Infof("Writing %d bytes to %s", len(data), final_filename)
 	return ioutil.WriteFile(final_filename, data, 0644)
 }
