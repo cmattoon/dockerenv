@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"log"
 
 	v2 "github.com/urfave/cli/v2"
 

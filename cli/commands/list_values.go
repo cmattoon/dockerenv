@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"syscall"
 
