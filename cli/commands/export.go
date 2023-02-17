@@ -102,7 +102,7 @@ func newContainerInfo(container types.ContainerJSON) ContainerInfo {
 func exportContainerEnvAction(c *v2.Context) error {
 	pathPrefix := c.String("path-prefix")
 	if len(pathPrefix) < 1 || !strings.HasPrefix(pathPrefix, "/") {
-		return fmt.Errorf("path-prefix must start with a '/'")
+		pathPrefix = "/"
 	}
 	outputDir := c.String("output-dir")
 	if outputDir != "" {
@@ -225,7 +225,7 @@ func writeFileData(filename string, data []byte) error {
 
 func writeS3Data(filename string, data []byte) error {
 	var s3write = (S3_BUCKET != "")
-	s3FullPath := fmt.Sprintf("s3://%s/%s", S3_BUCKET, filename)
+	s3FullPath := fmt.Sprintf("s3://%s%s", S3_BUCKET, filename)
 	log.Infof("Writing %d bytes to %s", len(data), s3FullPath)
 	log.Debugf("\033[33m%s\033[0m", data)
 	if !s3write {
