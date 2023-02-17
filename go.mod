@@ -3,6 +3,7 @@ module github.com/cmattoon/dockerenv
 go 1.16
 
 require (
+	github.com/aws/aws-sdk-go v1.15.11
 	github.com/containerd/containerd v1.5.5 // indirect
 	github.com/docker/docker v20.10.8+incompatible
 	github.com/docker/go-connections v0.4.0 // indirect

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -223,9 +224,14 @@ func writeFileData(filename string, data []byte) error {
 }
 
 func writeS3Data(filename string, data []byte) error {
+	var s3write = (S3_BUCKET != "")
 	s3FullPath := fmt.Sprintf("s3://%s/%s", S3_BUCKET, filename)
 	log.Infof("Writing %d bytes to %s", len(data), s3FullPath)
 	log.Debugf("\033[33m%s\033[0m", data)
+	if !s3write {
+		log.Warningf("S3_BUCKET is empty. No data will be written")
+		return nil // use as dry run for now
+	}
 
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(S3_REGION),
