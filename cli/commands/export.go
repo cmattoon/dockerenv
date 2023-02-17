@@ -229,7 +229,7 @@ func writeFileData(filename string, data []byte) error {
 	log.Infof("Preparing to write %d bytes to %s", len(data), final_filename)
 	log.Infof("Creating directory %s", dirPath)
 	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
-		log.Errorf(err)
+		log.Errorf("error creating directory: %s", err)
 		return
 	}
 
